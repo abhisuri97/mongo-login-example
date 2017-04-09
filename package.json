@@ -1,0 +1,19 @@
+{
+  "name": "mongodb-example",
+  "version": "1.0.0",
+  "description": "Simple example of user auth in an app with mongodb",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.1",
+    "cookie-session": "^2.0.0-beta.1",
+    "ejs": "^2.5.6",
+    "express": "^4.15.2",
+    "mongoose": "^4.9.3"
+  }
+}
