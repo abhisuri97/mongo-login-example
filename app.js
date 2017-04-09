@@ -17,6 +17,14 @@ app.use(cookieSession({
 
 app.use(bodyParser.urlencoded({extended: false}));
 
+app.get('/', function (req, res) {
+  if (req.session.username && req.session.username !== '') {
+    res.redirect('/protected');
+  } else {
+    res.redirect('/login');
+  }
+});
+
 app.get('/login', function (req, res) {
   res.render('login');
 });
