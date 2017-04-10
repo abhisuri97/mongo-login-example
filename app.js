@@ -4,12 +4,10 @@ var app = express();
 
 var cookieSession = require('cookie-session');
 var bodyParser = require('body-parser');
-var User = require('./User.js');
+var User = require('./User');
 
 app.engine('html', require('ejs').__express);
 app.set('view engine', 'html');
-
-app.use(express.static(__dirname + '/public'));
 
 app.use(cookieSession({
   secret: 'SHHisASecret'
@@ -32,18 +30,19 @@ app.get('/login', function (req, res) {
 app.post('/login', function(req, res) {
   username = req.body.username;
   password = req.body.password;
-
-  if (User.findOne({ username: username }, function (err, user) {
-    user.checkPassword(password, function(err, isRight) {
-      if (err) throw err;
+  User.checkIfLegit(username, password, function(err, isRight) {
+    if (err) {
+      res.send('Error! ' + err);
+    } else {
       if (isRight) {
         req.session.username = username;
         res.redirect('/protected');
       } else {
-        res.send('password ' + password + ' is wrong');
+        res.send('wrong password');
       }
-    });
-  }));
+    }
+  });
+
 });
 
 app.get('/register', function (req, res) {
@@ -51,18 +50,9 @@ app.get('/register', function (req, res) {
 });
 
 app.post('/register', function(req, res) {
-  var newUser = new User({ 
-    username: req.body.username,
-    password: req.body.password
-  });
-
-  newUser.save(function(err) {
+  User.addUser(req.body.username, req.body.password, function(err) {
     if (err) res.send('error' + err);
-    else res.send(
-      'user ' + newUser.username + 
-      ' registered with password hashed to ' + 
-      newUser.password
-    );
+    else res.send('new user registered with username ' + req.body.username);
   });
 });
 
